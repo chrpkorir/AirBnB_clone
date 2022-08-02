@@ -11,10 +11,20 @@ class BaseModel:
     defines all common attributes/methods for other classes
     """
 
-    def __init__(self):
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
+    def __init__(self, *args, **kwargs):
+        """initializes object using dictionary if given or it gives default"""
+        if kwargs:
+            for key, value in kwargs.items():
+                if key is not '__class__':
+                    setattr(self, key, value)
+            self.created_at = datetime.strptime(
+                kwargs['created_at'], '%Y-%m-%dT%H:%M:%S.%f')
+            self.updated_at = datetime.strptime(
+                kwargs['updated_at'], '%Y-%m-%dT%H:%M:%S.%f')
+        else:
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
 
     def __str__(self):
         """"string repr of obj"""
