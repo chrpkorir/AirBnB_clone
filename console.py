@@ -58,11 +58,11 @@ class HBNBCommand(cmd.Cmd):
         id by adding or updating attributes"""
         args = arg.split()
         if self.validate_arg(args):
-            if len(args) < 3:
-                print("** attribute name missing **")
-                return
             if len(args) < 4:
                 print("** value missing **")
+                return
+            if len(args) < 3:
+                print("** attribute name missing **")
                 return
             key = args[0] + '.' + args[1]
             obj = storage.all()[key]
