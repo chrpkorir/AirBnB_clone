@@ -10,6 +10,7 @@ class HBNBCommand(cmd.Cmd):
     """The HBNB console functionalities."""
     prompt = '(hbnb)'
     intro = ""
+    classes = {'BaseModel':BaseModel, 'User':User}
 
     def do_quit(self, command):
         """ Method to exit the HBNB console."""
@@ -37,10 +38,10 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        elif args != "BaseModel":
+        elif args not in classes:
             print("** class doesn't exist **")
             return
-        new_instance = BaseModel()
+        new_instance = classes[args]()
         print (new_instance.id)
 
     def do_show(self, args):
@@ -84,26 +85,47 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, args):
         """ """
-        if args != "BaseModel":
-            print("** class doesn't exist **")
-            return
+        print_list = []
 
-        for k, v in storage._FileStorage__objects.items():
-            print(v)
+        if args:
+            if args not in classes:
+                print("** class doesn't exist **")
+                return
+            for k, v in storage._FileStorage__objects.items():
+                if k == args.split('.')[0]:
+                    print_list.append(str(v))
+        else:
+            for k, v in storage._FileStorage__objects.items():
+                print_list.append(str(v))
+
+        print(print_list)
+
 
     def do_update(self, args):
         """ """
         new = args.split(" ")
-        c_name = new[0]
-        c_id = new[2]
-        attr_name = new[3]
-        attr_value = new[4]
+        try:
+            c_name = new[0]
+            c_id = new[2]
+            key = c_name + "." + c_id
+            attr_name = new[3]
+            attr_value = new[4]
+        except:
+            pass
+
         if not c_name:
             print("** class name missing **")
             return
 
+        if c_name not in classes:
+            print("** class doesn't exist **")
+            return
+
         if not c_id:
             print("** instance id missing **")
+            return
+        if key not in storage._FileStorage__objects:
+            print("** no instance found **")
             return
 
         if not attr_name:
@@ -114,7 +136,6 @@ class HBNBCommand(cmd.Cmd):
             print("** value missing **")
             return
 
-        key = c_name + "." + c_id
         try:
             new_dict = storge._FileStorage__objects[key]
             new_dict.update({attr_name: attr_val})
