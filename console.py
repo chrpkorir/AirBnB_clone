@@ -41,7 +41,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
         new_instance = BaseModel()
-        print (new_instance.id)
+        print(new_instance.id)
 
     def do_show(self, args):
         """Prints String representation of instance."""
@@ -61,7 +61,6 @@ class HBNBCommand(cmd.Cmd):
             print(storage._FileStorage__objects[key])
         except KeyError:
             print("** no instance found **")
-
 
     def do_destroy(self, args):
         """ """
@@ -116,7 +115,7 @@ class HBNBCommand(cmd.Cmd):
 
         key = c_name + "." + c_id
         try:
-            new_dict = storge._FileStorage__objects[key]
+            new_dict = storage._FileStorage__objects[key]
             new_dict.update({attr_name: attr_val})
         except KeyError:
             print("** no instance found **")
