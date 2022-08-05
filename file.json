@@ -12,5 +12,23 @@
         "name": "My_First_Model",
         "my_number": 89,
         "__class__": "BaseModel"
+    },
+    "User.e3db6b5c-896c-4018-b3a0-f0ce8b9eae60": {
+        "id": "e3db6b5c-896c-4018-b3a0-f0ce8b9eae60",
+        "created_at": "2022-08-05T20:44:45.408773",
+        "updated_at": "2022-08-05T20:44:45.408810",
+        "__class__": "User"
+    },
+    "BaseModel.20e48bef-13c0-4653-9a53-6b1b38e46e1d": {
+        "id": "20e48bef-13c0-4653-9a53-6b1b38e46e1d",
+        "created_at": "2022-08-05T21:00:36.985245",
+        "updated_at": "2022-08-05T21:00:36.985318",
+        "__class__": "BaseModel"
+    },
+    "User.2f1908fa-24f3-4723-8c16-5402bcc3646e": {
+        "id": "2f1908fa-24f3-4723-8c16-5402bcc3646e",
+        "created_at": "2022-08-05T21:02:15.056526",
+        "updated_at": "2022-08-05T21:02:15.056567",
+        "__class__": "User"
     }
 }
