@@ -4,6 +4,7 @@
 import cmd
 from models.base_model import BaseModel
 from models.__init__ import storage
+from models.user import User
 
 
 class HBNBCommand(cmd.Cmd):
@@ -18,7 +19,7 @@ class HBNBCommand(cmd.Cmd):
 
     def help_quit(self):
         """Prints the help documentation for quit."""
-        print("Exits the program with formatting")
+        print("Quit to exit the program")
 
     def do_EOF(self, arg):
         """Handles EOF to exit program."""
@@ -38,10 +39,10 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        elif args not in classes:
+        elif args not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = classes[args]()
+        new_instance = HBNBCommand.classes[args]()
         print (new_instance.id)
 
     def do_show(self, args):
@@ -51,6 +52,10 @@ class HBNBCommand(cmd.Cmd):
         c_id = new[2]
         if not c_name:
             print("** class name missing **")
+            return
+
+        if c_name not in HBNBCommand.classes:
+            print("** class doesn't exist **")
             return
 
         if not c_id:
@@ -73,6 +78,10 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
 
+        if c_name not in HBNBCommand.classes:
+            print("** class doesn't exist **")
+            return
+
         if not c_id:
             print("** instance id missing **")
             return
@@ -88,11 +97,11 @@ class HBNBCommand(cmd.Cmd):
         print_list = []
 
         if args:
-            if args not in classes:
+            if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
             for k, v in storage._FileStorage__objects.items():
-                if k == args.split('.')[0]:
+                if k.split('.')[0] == args:
                     print_list.append(str(v))
         else:
             for k, v in storage._FileStorage__objects.items():
@@ -117,7 +126,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
 
-        if c_name not in classes:
+        if c_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
 
