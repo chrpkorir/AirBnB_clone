@@ -17,10 +17,10 @@ class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb)'
     intro = ""
     classes = {
-            'BaseModel':BaseModel, 'User':User, 'Place': Place
-            'State': State, 'City': City, 'Amenity': Amenity,
-            'Review': Review
-            }
+        'BaseModel': BaseModel, 'User': User, 'Place': Place,
+        'State': State, 'City': City, 'Amenity': Amenity,
+        'Review': Review
+    }
 
     def do_quit(self, command):
         """ Method to exit the HBNB console."""
@@ -52,7 +52,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
         new_instance = HBNBCommand.classes[args]()
-        print (new_instance.id)
+        print(new_instance.id)
 
     def help_create(self):
         """Help information for create command."""
@@ -146,7 +146,7 @@ class HBNBCommand(cmd.Cmd):
             key = c_name + "." + c_id
             attr_name = new[3]
             attr_value = new[4]
-        except:
+        except Exception:
             pass
 
         if not c_name:
@@ -182,6 +182,7 @@ class HBNBCommand(cmd.Cmd):
         """Help information for the update class."""
         print("Updates an object woth new information")
         print("Usage: update <className> <id> <attName> <attValue>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
