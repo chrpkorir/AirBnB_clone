@@ -173,7 +173,7 @@ class HBNBCommand(cmd.Cmd):
             return
 
         try:
-            new_dict = storge._FileStorage__objects[key]
+            new_dict = storage._FileStorage__objects[key]
             new_dict.update({attr_name: attr_val})
         except KeyError:
             print("** no instance found **")
