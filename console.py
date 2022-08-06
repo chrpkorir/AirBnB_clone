@@ -2,20 +2,40 @@
 """Console module."""
 
 import cmd
-from models.base_model import BaseModel
+import re
+
 from models.__init__ import storage
-from models.user import User
-from models.amenity import Amenity
-from models.city import City
-from models.place import Place
-from models.review import Review
-from models.state import State
 
 
 class HBNBCommand(cmd.Cmd):
     """The HBNB console functionalities."""
     prompt = '(hbnb)'
     intro = ""
+
+    def parseline(self, line):
+        print("----start-----")
+        print("---------------")
+        print("----self-----")
+        print(self)
+        print("----line-----")
+        print(line)
+        if '.' in line and '(' in line and ')' in line:
+            toks = re.split(r'\.|\(|\)', line)
+            print("----toks-----")
+            print(toks)
+            toks[2] = toks[2].strip('"').replace(',', ' ')
+            newline = toks[1] + ' ' + toks[0] + ' ' + toks[2]
+            line = (toks[1], toks[0] + toks[2], newline)
+            print("----new line after regex-----")
+            print(line)
+            print("----end-----")
+            print("---------------")
+            
+            if toks[1] == 'count':
+                self.count(toks[0])
+                return cmd.Cmd.parseline(self, '')
+            return line
+        return cmd.Cmd.parseline(self, line)
 
     def do_quit(self, command):
         """ Method to exit the HBNB console."""
@@ -114,7 +134,10 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, args):
         """Shows all objects of a class/ all objects. """
         print_list = []
-
+        print("============ all args ========")
+        print(args)
+        print(len(args))
+        print("============  ========")
         if args:
             if args not in storage.classes():
                 print("** class doesn't exist **")
