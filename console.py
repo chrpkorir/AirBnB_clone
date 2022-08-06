@@ -16,11 +16,6 @@ class HBNBCommand(cmd.Cmd):
     """The HBNB console functionalities."""
     prompt = '(hbnb)'
     intro = ""
-    classes = {
-        'BaseModel': BaseModel, 'User': User, 'Place': Place,
-        'State': State, 'City': City, 'Amenity': Amenity,
-        'Review': Review
-    }
 
     def do_quit(self, command):
         """ Method to exit the HBNB console."""
@@ -48,10 +43,11 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+        elif args not in storage.classes():
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args]()
+        new_instance = storage.classes()[args]()
+        new_instance.save()
         print(new_instance.id)
 
     def help_create(self):
@@ -68,7 +64,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
 
-        if c_name not in HBNBCommand.classes:
+        if c_name not in storage.classes():
             print("** class doesn't exist **")
             return
 
@@ -96,7 +92,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
 
-        if c_name not in HBNBCommand.classes:
+        if c_name not in storage.classes():
             print("** class doesn't exist **")
             return
 
@@ -120,7 +116,7 @@ class HBNBCommand(cmd.Cmd):
         print_list = []
 
         if args:
-            if args not in HBNBCommand.classes:
+            if args not in storage.classes():
                 print("** class doesn't exist **")
                 return
             for k, v in storage._FileStorage__objects.items():
@@ -153,7 +149,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
 
-        if c_name not in HBNBCommand.classes:
+        if c_name not in storage.classes():
             print("** class doesn't exist **")
             return
 
@@ -174,7 +170,7 @@ class HBNBCommand(cmd.Cmd):
 
         try:
             new_dict = storage._FileStorage__objects[key]
-            new_dict.update({attr_name: attr_val})
+            new_dict.update({attr_name: attr_value})
         except KeyError:
             print("** no instance found **")
 
