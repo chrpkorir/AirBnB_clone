@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """Module city.py
-that inherits from BaseModel.
+City Class that inherits from BaseModel.
 """
 
 from models.base_model import BaseModel
