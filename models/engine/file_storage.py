@@ -4,6 +4,7 @@
 import datetime
 import json
 import os
+from pprint import pprint
 
 
 class FileStorage:
@@ -18,13 +19,17 @@ class FileStorage:
 
     def new(self, obj):
         """Sets new obj in __objects dictionary."""
-
         key = "{}.{}".format(type(obj).__name__, obj.id)
+        FileStorage.__objects[key] = obj
+
+    def update(self, obj, key):
+        """updates an obj in __objects dictionary."""
         FileStorage.__objects[key] = obj
 
     def save(self):
         """Serializes __objects to JSON file."""
-
+        print("================ saving ================")
+        pprint(FileStorage.__objects.items())
         with open(FileStorage.__file_path, "w", encoding="utf-8") as f:
             d = {k: v.to_dict() for k, v in FileStorage.__objects.items()}
             json.dump(d, f)

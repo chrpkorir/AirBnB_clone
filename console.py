@@ -2,8 +2,9 @@
 """Console module."""
 
 import cmd
+from inspect import Arguments
 import re
-
+from pprint import pprint
 from models.__init__ import storage
 
 
@@ -13,24 +14,16 @@ class HBNBCommand(cmd.Cmd):
     intro = ""
 
     def parseline(self, line):
-        print("----start-----")
-        print("---------------")
-        print("----self-----")
-        print(self)
-        print("----line-----")
-        print(line)
+
         if '.' in line and '(' in line and ')' in line:
             toks = re.split(r'\.|\(|\)', line)
-            print("----toks-----")
-            print(toks)
             toks[2] = toks[2].strip('"').replace(',', ' ')
             newline = toks[1] + ' ' + toks[0] + ' ' + toks[2]
-            line = (toks[1], toks[0] + toks[2], newline)
-            print("----new line after regex-----")
-            print(line)
-            print("----end-----")
-            print("---------------")
-            
+            if toks[2] == '':
+                line = (toks[1], toks[0], newline)
+            else:
+                line = (toks[1], toks[0] + " " + toks[2], newline)
+
             if toks[1] == 'count':
                 self.count(toks[0])
                 return cmd.Cmd.parseline(self, '')
@@ -57,6 +50,26 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """Overrides the CMD emptline method."""
         pass
+
+    def count(self, args):
+        """counts the number of instance of class"""
+        if args == "all":
+            for arg in storage.classes():
+                self.countone(arg)
+        else:
+            self.countone(args)
+
+    def countone(self, args):
+        """counts the number of instance of class"""
+        n = 0
+        for k, v in storage.all().items():
+            if type(v).__name__ == args:
+                n += 1
+        print(f"{n} Intances of {args}")
+        print(n)
+
+    def help_count(self):
+        print("**counts the instances of a class")
 
     def do_create(self, args):
         """Creates an object of any class."""
@@ -105,24 +118,39 @@ class HBNBCommand(cmd.Cmd):
 
     def do_destroy(self, args):
         """Destroys a specified object. """
+
         new = args.partition(" ")
         c_name = new[0]
         c_id = new[2]
-        if not c_name:
+        if c_id == "all":
+            for k, v in list(storage.all().items()):
+                idclass = k.split('.')
+                if idclass[0] == c_name:
+                    self.delete_instance(idclass[0], idclass[1])
+
+        else:
+            self.delete_instance(c_name, c_id)
+
+        storage.save()
+
+    def delete_instance(self, name, id):
+        """helper function for destroying an object instance"""
+        if not name:
             print("** class name missing **")
             return
 
-        if c_name not in storage.classes():
+        if name not in storage.classes():
             print("** class doesn't exist **")
             return
 
-        if not c_id:
+        if not id:
             print("** instance id missing **")
             return
 
-        key = c_name + "." + c_id
+        key = name + "." + id
         try:
-            del(storage._FileStorage__objects[key])
+            del storage.all()[key]
+
         except KeyError:
             print("** no instance found **")
 
@@ -132,12 +160,7 @@ class HBNBCommand(cmd.Cmd):
         print("[Usage]: destroy <className> <objectId>\n")
 
     def do_all(self, args):
-        """Shows all objects of a class/ all objects. """
         print_list = []
-        print("============ all args ========")
-        print(args)
-        print(len(args))
-        print("============  ========")
         if args:
             if args not in storage.classes():
                 print("** class doesn't exist **")
@@ -149,7 +172,7 @@ class HBNBCommand(cmd.Cmd):
             for k, v in storage._FileStorage__objects.items():
                 print_list.append(str(v))
 
-        print(print_list)
+        pprint(print_list, indent=1)
 
     def help_all(self):
         """Help information for all command."""
@@ -158,15 +181,38 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, args):
         """Updates a cetain onbejct with new information. """
+        print("========= update args ============")
+        print(args)
         new = args.split(" ")
+        print("=== new =====")
+        print(new)
+        for word in range(len(new)):
+            new[word] = self.strip_quotes(new[word])
+
+        del new[2]
+        del new[3]
+        print("=== stripped words =====")
+        print(new)
+
+        if len(new) < 4:
+            print("new value missing")
+            return
+        if len(new) < 3:
+            print("attibute name missing")
+            return
         try:
             c_name = new[0]
-            c_id = new[2]
+            c_id = new[1]
             key = c_name + "." + c_id
-            attr_name = new[3]
-            attr_value = new[4]
+            attr_name = new[2]
+            attr_value = new[3]
+
         except Exception:
             pass
+
+        print("=== update args, name , id , attr name, attr value =====")
+        print(c_name, c_id, self.strip_quotes(
+            new[2]), self.strip_quotes(new[3]))
 
         if not c_name:
             print("** class name missing **")
@@ -192,8 +238,13 @@ class HBNBCommand(cmd.Cmd):
             return
 
         try:
-            new_dict = storage._FileStorage__objects[key]
-            new_dict.update({attr_name: attr_value})
+
+            new_dict = storage.all()[key].to_dict()
+            print(new_dict)
+            new_dict[attr_name] = attr_value
+            storage.update(new_dict, key)
+            # new_dict.update({attr_name: attr_value})
+            # storage.save()
         except KeyError:
             print("** no instance found **")
 
@@ -201,6 +252,19 @@ class HBNBCommand(cmd.Cmd):
         """Help information for the update class."""
         print("Updates an object woth new information")
         print("Usage: update <className> <id> <attName> <attValue>\n")
+        print("Usage: update <className> <id> <attName> <attValue>\n")
+
+    def strip_quotes(self, str):
+        if not str:
+            return
+        if str[0] == '"' and str[len(str) - 1] == '"':
+            return str[1:len(str) - 1]
+        elif str[0] == '"':
+            return str[1:]
+        elif str[len(str) - 1] == '"':
+            return str[:len(str) - 1]
+        else:
+            return str
 
 
 if __name__ == "__main__":
