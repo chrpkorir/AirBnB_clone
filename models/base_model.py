@@ -2,6 +2,7 @@
 """
 contains BaseModel definitions.
 """
+
 import uuid
 from datetime import datetime
 from models import storage
