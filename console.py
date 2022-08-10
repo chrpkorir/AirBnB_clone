@@ -17,17 +17,25 @@ class HBNBCommand(cmd.Cmd):
 
         if '.' in line and '(' in line and ')' in line:
             toks = re.split(r'\.|\(|\)', line)
-            toks[2] = toks[2].strip('"').replace(',', ' ')
-            newline = toks[1] + ' ' + toks[0] + ' ' + toks[2]
-            if toks[2] == '':
+
+            payload = toks[2].strip('"').replace(',', ' ')
+            # if payload[0] == '{' and payload[-1] == '}':
+            payload = self.dict_to_str(payload)
+
+            newline = toks[1] + ' ' + toks[0] + ' ' + payload
+            if payload == '':
                 line = (toks[1], toks[0], newline)
             else:
-                line = (toks[1], toks[0] + " " + toks[2], newline)
+                line = (toks[1], toks[0] + " " + payload, newline)
 
             if toks[1] == 'count':
                 self.count(toks[0])
                 return cmd.Cmd.parseline(self, '')
             return line
+        else:
+            print("intercepted straight one")
+            args = line.split(" ")
+            pprint(args)
         return cmd.Cmd.parseline(self, line)
 
     def do_quit(self, command):
@@ -51,6 +59,10 @@ class HBNBCommand(cmd.Cmd):
         """Overrides the CMD emptline method."""
         pass
 
+    def do_test(self, args):
+        """test args parsing"""
+        print(args)
+
     def count(self, args):
         """counts the number of instance of class"""
         if args == "all":
@@ -73,13 +85,18 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """Creates an object of any class."""
-        if not args:
+        argarr = args.split(" ")
+        print("=========== create args ++++++++++++++++++++")
+        pprint(argarr)
+        print("=========== create args ++++++++++++++++++++")
+        c_name = argarr[0]
+        if not c_name:
             print("** class name missing **")
             return
-        elif args not in storage.classes():
+        elif c_name not in storage.classes():
             print("** class doesn't exist **")
             return
-        new_instance = storage.classes()[args]()
+        new_instance = storage.classes()[c_name](argarr)
         new_instance.save()
         print(new_instance.id)
 
@@ -254,7 +271,27 @@ class HBNBCommand(cmd.Cmd):
         print("Usage: update <className> <id> <attName> <attValue>\n")
         print("Usage: update <className> <id> <attName> <attValue>\n")
 
+    def dict_to_str(self, dict):
+        """"converts  a dictionary like string to string for easier parsing"""
+        dictlist = dict.split(' ')
+        newstr = ""
+        for idx in range(len(dictlist)):
+            newword = ""
+            for word in dictlist[idx]:
+                if not word == '"' and not word == '' and not word == "'" and\
+                    not word == "}" and not word == "{"  \
+                        and not word == ":":
+                    newword = "".join([newword, word])
+            if len(newword) > 0:
+                newstr += str(newword) + " "
+                
+        newstr = newstr.strip()            
+        print("===== dict list =========")
+        print(newstr)
+        return newstr
+
     def strip_quotes(self, str):
+        """removes quotes from strings for easier parsing"""
         if not str:
             return
         if str[0] == '"' and str[len(str) - 1] == '"':
