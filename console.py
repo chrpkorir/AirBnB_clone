@@ -14,8 +14,13 @@ class HBNBCommand(cmd.Cmd):
     intro = ""
 
     def parseline(self, line):
+        """ cmd function that we'll override to intercept incomming commands
+        and return standardly parsed commands for easr of use
+        """
 
         if '.' in line and '(' in line and ')' in line:
+            """ intercepts commands with .() notation and extracts the arsg 
+            into one strings"""
             toks = re.split(r'\.|\(|\)', line)
 
             payload = toks[2].strip('"').replace(',', ' ')
@@ -25,33 +30,36 @@ class HBNBCommand(cmd.Cmd):
             newline = toks[1] + ' ' + toks[0] + ' ' + payload
             if payload == '':
                 line = (toks[1], toks[0], newline)
-                print("line no payload")
-                print(line)
+                # print("======== line no payload =======")
+                # print(line)
             else:
                 line = (toks[1], toks[0] + " " + payload, newline)
-                print("line with payload")
-                print(line)
+                # print("========= line with payload ===========")
+                # print(line)
 
             if toks[1] == 'count':
                 self.count(toks[0])
                 return cmd.Cmd.parseline(self, '')
-            print("====== line =====")
-            print(line)
+            # print("====== line =====")
+            # print(line)
             return line
         else:
-            print("intercepted straight one")
+            """ intercepts regular all string commands to remove any quotes
+            to output standadized text
+            """
             args = line.split(" ")
-            pprint(args)
+            # print("intercepted straight one")
+            # pprint(args)
             payload = []
             if len(args) > 2:
                 payload = args[2:]
                 payload = self.list_to_string(payload)
-                print("==== sanitized payload =====")
-                print(payload)
+                # print("==== sanitized payload =====")
+                # print(payload)
                 newline = args[0] + ' ' + args[1] + ' ' + payload
                 line = (args[0], args[1] + " " + payload, newline)
-                print("====== line =====")
-                print(line)
+                # print("====== line =====")
+                # print(line)
                 return line
         return cmd.Cmd.parseline(self, line)
 
@@ -103,9 +111,9 @@ class HBNBCommand(cmd.Cmd):
     def do_create(self, args):
         """Creates an object of any class."""
         argarr = args.split(" ")
-        print("=========== create args ++++++++++++++++++++")
-        pprint(argarr)
-        print("=========== create args ++++++++++++++++++++")
+        # print("=========== create args ++++++++++++++++++++")
+        # pprint(argarr)
+        # print("=========== create args ++++++++++++++++++++")
         c_name = argarr[0]
         if not c_name:
             print("** class name missing **")
@@ -215,18 +223,18 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, args):
         """Updates a cetain onbejct with new information. """
-        print("========= update args ============")
-        print(args)
+        # print("========= update args ============")
+        # print(args)
         new = args.split(" ")
-        print("=== new =====")
-        print(new)
+        # print("=== new =====")
+        # print(new)
         for word in range(len(new)):
             new[word] = self.strip_quotes(new[word])
 
         del new[2]
         del new[3]
-        print("=== stripped words =====")
-        print(new)
+        # print("=== stripped words =====")
+        # print(new)
 
         if len(new) < 4:
             print("new value missing")
@@ -303,8 +311,8 @@ class HBNBCommand(cmd.Cmd):
                 newstr += str(newword) + " "
 
         newstr = newstr.strip()
-        print("===== dict list =========")
-        print(newstr)
+        # print("===== dict list =========")
+        # print(newstr)
         return newstr
 
     def list_to_string(self, list):
@@ -317,15 +325,15 @@ class HBNBCommand(cmd.Cmd):
             for chr in word:
                 if not chr == '"' and not chr == '' and not chr == "'":
                     newword = "".join([newword, chr])
-        
-            print("===== new word =========")
-            print(newword)
+
+            # print("===== new word =========")
+            # print(newword)
             if len(newword) > 0:
                 newstr += str(newword) + " "
 
         newstr = newstr.strip()
-        print("===== list to str =========")
-        print(newstr)
+        # print("===== list to str =========")
+        # print(newstr)
         return newstr
 
     def strip_quotes(self, str):
