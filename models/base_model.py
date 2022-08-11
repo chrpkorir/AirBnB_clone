@@ -33,9 +33,9 @@ class BaseModel:
             self.updated_at = datetime.now()
             storage.new(self)
         if len(args) >= 1:
-            print("========= args  ============= ")
-            print(args[0])
-            print(len(args[0]))
+            # print("========= args  ============= ")
+            # print(args[0])
+            # print(len(args[0]))
             self.create(args[0], self)
 
     def __str__(self):
