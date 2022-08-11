@@ -25,17 +25,34 @@ class HBNBCommand(cmd.Cmd):
             newline = toks[1] + ' ' + toks[0] + ' ' + payload
             if payload == '':
                 line = (toks[1], toks[0], newline)
+                print("line no payload")
+                print(line)
             else:
                 line = (toks[1], toks[0] + " " + payload, newline)
+                print("line with payload")
+                print(line)
 
             if toks[1] == 'count':
                 self.count(toks[0])
                 return cmd.Cmd.parseline(self, '')
+            print("====== line =====")
+            print(line)
             return line
         else:
             print("intercepted straight one")
             args = line.split(" ")
             pprint(args)
+            payload = []
+            if len(args) > 2:
+                payload = args[2:]
+                payload = self.list_to_string(payload)
+                print("==== sanitized payload =====")
+                print(payload)
+                newline = args[0] + ' ' + args[1] + ' ' + payload
+                line = (args[0], args[1] + " " + payload, newline)
+                print("====== line =====")
+                print(line)
+                return line
         return cmd.Cmd.parseline(self, line)
 
     def do_quit(self, command):
@@ -279,14 +296,35 @@ class HBNBCommand(cmd.Cmd):
             newword = ""
             for word in dictlist[idx]:
                 if not word == '"' and not word == '' and not word == "'" and\
-                    not word == "}" and not word == "{"  \
+                    not word == "}" and not word == "{"   \
                         and not word == ":":
                     newword = "".join([newword, word])
             if len(newword) > 0:
                 newstr += str(newword) + " "
-                
-        newstr = newstr.strip()            
+
+        newstr = newstr.strip()
         print("===== dict list =========")
+        print(newstr)
+        return newstr
+
+    def list_to_string(self, list):
+        """ takes a list and spits out a string comprised of each list 
+        item separated by blank space  """
+        newstr = ""
+        for idx in range(len(list)):
+            word = list[idx]
+            newword = ""
+            for chr in word:
+                if not chr == '"' and not chr == '' and not chr == "'":
+                    newword = "".join([newword, chr])
+        
+            print("===== new word =========")
+            print(newword)
+            if len(newword) > 0:
+                newstr += str(newword) + " "
+
+        newstr = newstr.strip()
+        print("===== list to str =========")
         print(newstr)
         return newstr
 
