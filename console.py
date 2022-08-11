@@ -19,8 +19,8 @@ class HBNBCommand(cmd.Cmd):
         """
 
         if '.' in line and '(' in line and ')' in line:
-            """ intercepts commands with .() notation and extracts the arsg 
-            into one strings"""
+            """ intercepts commands with .() notation and extracts the
+            args into one strings"""
             toks = re.split(r'\.|\(|\)', line)
 
             payload = toks[2].strip('"').replace(',', ' ')
@@ -316,8 +316,8 @@ class HBNBCommand(cmd.Cmd):
         return newstr
 
     def list_to_string(self, list):
-        """ takes a list and spits out a string comprised of each list 
-        item separated by blank space  """
+        """ takes a list and spits out a string comprised of each
+        list item separated by blank space  """
         newstr = ""
         for idx in range(len(list)):
             word = list[idx]

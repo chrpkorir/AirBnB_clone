@@ -78,7 +78,7 @@ class FileStorage:
                  "password": str,
                  "first_name": str,
                  "last_name": str},
-                  
+
             "State":
                 {"name": str},
             "City":
