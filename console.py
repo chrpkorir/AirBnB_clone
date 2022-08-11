@@ -222,71 +222,41 @@ class HBNBCommand(cmd.Cmd):
         print("[Usage]: all <className>\n")
 
     def do_update(self, args):
-        """Updates a cetain onbejct with new information. """
-        # print("========= update args ============")
-        # print(args)
+        """Updates an onbject with new args overwriting the previous ones """
         new = args.split(" ")
-        # print("=== new =====")
-        # print(new)
-        for word in range(len(new)):
-            new[word] = self.strip_quotes(new[word])
+        if len(new) == 1:
+            print(" insufficient args ,instance id might be missing")
+        if len(new) == 2:
+            print("insufficient arguments , needs at least 1 key value pair ")
+        if len(new) > 3:
+            self.update_instance(new)
+        storage.save()
 
-        del new[2]
-        del new[3]
-        # print("=== stripped words =====")
-        # print(new)
-
-        if len(new) < 4:
-            print("new value missing")
-            return
-        if len(new) < 3:
-            print("attibute name missing")
-            return
-        try:
-            c_name = new[0]
-            c_id = new[1]
-            key = c_name + "." + c_id
-            attr_name = new[2]
-            attr_value = new[3]
-
-        except Exception:
-            pass
-
-        print("=== update args, name , id , attr name, attr value =====")
-        print(c_name, c_id, self.strip_quotes(
-            new[2]), self.strip_quotes(new[3]))
-
-        if not c_name:
+    def update_instance(self, args):
+        """"helper function to update an instance """
+        name = args[0]
+        id = args[1]
+        """helper function for destroying an object instance"""
+        if not name:
             print("** class name missing **")
             return
 
-        if c_name not in storage.classes():
+        if name not in storage.classes():
             print("** class doesn't exist **")
             return
 
-        if not c_id:
+        if not id:
             print("** instance id missing **")
             return
-        if key not in storage._FileStorage__objects:
-            print("** no instance found **")
-            return
 
-        if not attr_name:
-            print("** attribute name missing **")
-            return
-
-        if not attr_value:
-            print("** value missing **")
-            return
-
+        key = name + "." + id
+        # if valid key is found we'll search for it be key on the storage
+        # class and call te update method in the base_model
+        # remeber to pass in the object itself in the instance parameter
+        # <storage.all()[key]> the other param <args> is from user input
         try:
+            storage.all()[key].update(args, storage.all()[key])
 
-            new_dict = storage.all()[key].to_dict()
-            print(new_dict)
-            new_dict[attr_name] = attr_value
-            storage.update(new_dict, key)
-            # new_dict.update({attr_name: attr_value})
-            # storage.save()
         except KeyError:
             print("** no instance found **")
 

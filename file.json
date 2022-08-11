@@ -1,1 +1,19 @@
-{"User.a4427d9f-dc1b-438d-ae16-4298593f2e02": {"id": "a4427d9f-dc1b-438d-ae16-4298593f2e02", "created_at": "2022-08-11T07:15:21.322521", "updated_at": "2022-08-11T07:15:21.322939", "__class__": "User"}}
+{
+    "User.uwu": {
+        "id": "uwu",
+        "created_at": "2022-08-11T07:15:21.322521",
+        "updated_at": "2022-08-11T15:16:35.771709",
+        "email": "denel",
+        "age": "89",
+        "first_name": "John",
+        "__class__": "User"
+    },
+    "User.b1effd7c-67fb-4565-8672-ad22946deead": {
+        "id": "b1effd7c-67fb-4565-8672-ad22946deead",
+        "created_at": "2022-08-11T15:17:35.410747",
+        "updated_at": "2022-08-11T15:17:35.410989",
+        "first_name": "Jane",
+        "age": "19",
+        "__class__": "User"
+    }
+}

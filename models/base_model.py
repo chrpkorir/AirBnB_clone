@@ -17,10 +17,7 @@ class BaseModel:
         """initializes object using dictionary if given otherwise
         it gives default value
         """
-        # print("========= kwargs  ============= ")
-        # print(kwargs)
 
-        # print("+++++++++++++++++++++++++++++++++++++")
         if kwargs:
             for key, value in kwargs.items():
                 if key != '__class__':
@@ -47,6 +44,28 @@ class BaseModel:
         """updates the public instance attribute"""
         self.updated_at = datetime.now()
         storage.save()
+
+    def uwu(self, instance):
+        print("let's go boys")
+        print(instance)
+
+    def update(self, args, instance):
+        """update an obect instance by ID"""
+        marker = 0
+        if len(args) >= 3:
+            attrs = args[2:]
+            for idx in range(len(attrs)):
+                # print("========== attr len , marker ==========")
+                # print(len(attrs), marker + 1)
+                if marker + 1 >= len(attrs):
+                    break
+                trimed = attrs[marker:marker + 2]
+                # print(f"------------- attrs in loop # {idx}")
+                self.add_attributes(instance, trimed, args[0])
+                self.updated_at = datetime.now()
+                marker += 2
+        else:
+            print("insuficient arguments")
 
     def create(self, args, instance):
         """helper function to create a class instance with args """
@@ -86,6 +105,7 @@ class BaseModel:
 
         except KeyError:
             print(f"attribute {attr_list[0]} doesn't exist in class {c_name}")
+            setattr(instance, attr_list[0], attr_list[1])
 
     def to_dict(self):
         """returns a dictionary containing all key/value of __dict__
