@@ -1,0 +1,10 @@
+body {
+    color: #FF0000;
+}
+
+h3,
+div.full_text,
+div.small_text h4,
+div.filters p.title {
+    font-size: 20px;
+}
